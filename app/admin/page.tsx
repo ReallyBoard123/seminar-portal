@@ -27,6 +27,11 @@ import { ParticipantsPanel } from "./ParticipantsPanel";
  *    "not authorised" state, the three cases left indistinguishable on
  *    purpose.
  */
+// The zero-participant bootstrap branch renders before any cookie is read,
+// so without this Next prerenders it as static at build time — and a fresh
+// deployment then serves "no participants yet" forever, whatever the DB says.
+export const dynamic = "force-dynamic";
+
 export default async function SeminarAdminPage() {
   const config = await readConfig();
   const participants = await listParticipants(config.edition);

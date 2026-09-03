@@ -8,3 +8,4 @@ local.db*
 .pnpm-store/
 data/*.csv
 !data/participants.example.csv
+.vercel
