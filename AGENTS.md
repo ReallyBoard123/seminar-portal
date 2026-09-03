@@ -156,3 +156,41 @@ and creates the audit trail correctly.
 - Formats/canvases (`app/lib/types.ts`) are code: change them only when the
   human asks, and run `pnpm vitest run` after — the canvas tests enforce
   the invariant that no field key appears in two canvases.
+
+# Agent restyling guide
+
+The portal is deliberately plain — neutral shadcn tokens, one accent-free
+palette — so an institution can put its own face on it. Think of it as
+visually headless: all theming lives in a handful of files, and none of the
+feature code contains colors. When someone asks you to "make it look like
+our university", this is the map.
+
+## Where everything lives
+
+| You want to change | File | What exactly |
+|---|---|---|
+| Colors (whole app, light + dark) | `app/globals.css` | The CSS custom properties in `:root` and `.dark`. Everything is oklch. `--primary` drives buttons, `--background`/`--card`/`--muted` the surfaces, `--radius` the corner rounding globally. |
+| Deadline status colors | `app/globals.css` | `--overdue*` (red), `--soon*` (amber), `--settled*` (green). These are **semantic** — keep them distinguishable from each other and from `--primary`, whatever the brand palette says. |
+| Fonts | `app/layout.tsx` + `app/globals.css` | Swap the `Geist` import for any `next/font` face; it binds to `--font-sans`. `--font-heading` and `--font-mono` are separate knobs in the `@theme` block. |
+| Wordmark in the nav | `app/components/PortalNav.tsx` | The `BRAND` constant. |
+| Name in emails / print headers | Admin GUI | Edition settings → "Short name". Not code. |
+| Browser tab title, meta | `app/layout.tsx` | The `metadata` export. Keep `robots: noindex` — this is an internal tool. |
+| Button/badge/input look | `components/ui/*.tsx` | Standard shadcn components; edit variants there. They are the only place Tailwind classes encode "how controls look". |
+| Print/PDF canvas styling | `app/resources/canvas/canvas.css` | A4 landscape, forced black-on-white. If you touch it, keep the black-on-white override — brand colors in a PDF handed to a supervisor helps nobody. |
+| Page copy (footer contacts, notes) | Admin GUI | Almost all user-facing prose is edition config, not code. Grep before you edit a string — if it comes from `config.*`, the GUI owns it. |
+
+## Rules when restyling
+
+- Change tokens, not components: if you find yourself editing a page file to
+  recolor something, you are in the wrong file — fix the token in
+  `app/globals.css` instead.
+- Keep both modes: every color you set in `:root` needs its `.dark`
+  counterpart, or dark mode ships half-branded.
+- Contrast is not optional: body text ≥ 4.5:1 against its surface, status
+  colors distinguishable for color-blind readers (the three deadline hues
+  are red/amber/green *and* differ in lightness — preserve that).
+- Never encode meaning in color alone — the UI already pairs every status
+  color with a word; keep it that way.
+- After any restyle: `pnpm build` and eyeball `/`, `/me`, `/admin`, and a
+  canvas print preview (Ctrl+P on `/resources/canvas?format=poster`) in both
+  light and dark.
