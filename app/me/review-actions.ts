@@ -16,7 +16,7 @@ import { readConfig } from "../lib/config";
 import { notify, portalUrl } from "../lib/mail";
 import { reviewReceived } from "../lib/mail-templates";
 import { listParticipants, logEvent, saveReview } from "../lib/db";
-import {
+import { demoGuard,
   arrayOf,
   dbId,
   parseForm,
@@ -81,6 +81,7 @@ function collectPoints(data: ReviewForm): ReviewPoint[] {
 }
 
 export async function submitReview(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const caller = await currentParticipant();
   if (!caller) return { ok: false, message: "Sign in first." };
 

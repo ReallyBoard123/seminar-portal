@@ -18,7 +18,7 @@ import { currentParticipant } from "@/app/lib/auth";
 import { broadcastRecipients } from "@/app/lib/broadcast";
 import { readConfig } from "@/app/lib/config";
 import { listFiles, listParticipants, logEvent } from "@/app/lib/db";
-import { arrayOf, parseForm, parseObject, requiredText, round, sanitizeFilename, type ActionResult } from "@/app/lib/forms";
+import { demoGuard, arrayOf, parseForm, parseObject, requiredText, round, sanitizeFilename, type ActionResult } from "@/app/lib/forms";
 import { mailConfigured, portalUrl, sendBatch, sendMail, type MailAttachment } from "@/app/lib/mail";
 import { footer } from "@/app/lib/mail-templates";
 import type { Participant, Round } from "@/app/lib/types";
@@ -78,6 +78,7 @@ function summarize(what: string, summary: Awaited<ReturnType<typeof sendBatch>>)
  * itself shows.
  */
 export async function remindRound(_prev: ActionResult, payload: { round: Round }): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
   if (!mailConfigured()) {
@@ -122,6 +123,7 @@ export async function remindRound(_prev: ActionResult, payload: { round: Round }
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars -- prevState required by useActionState's action signature */
 export async function sendSignInInvites(_prev: ActionResult): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
   if (!mailConfigured()) {
@@ -165,6 +167,7 @@ const broadcastSchema = z.object({
  * organiser's real address, written by hand, as ever.
  */
 export async function broadcastMail(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
   if (!mailConfigured()) {

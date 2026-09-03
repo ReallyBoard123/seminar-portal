@@ -21,7 +21,7 @@ import {
   submissionReceived,
 } from "../lib/mail-templates";
 import { addFile, deleteFile, getFile, listParticipants, logEvent, updateParticipant } from "../lib/db";
-import { text, dbId, optionalId, parseForm, round as roundField, sanitizeFilename, type ActionResult } from "../lib/forms";
+import { demoGuard, text, dbId, optionalId, parseForm, round as roundField, sanitizeFilename, type ActionResult } from "../lib/forms";
 import { PARTICIPANT_FILE_KINDS, type FileKind, type Round } from "../lib/types";
 
 export type { ActionResult };
@@ -49,6 +49,7 @@ const uploadSchema = z.object({
  *  requires the caller to be one of their two reviewers; every other kind
  *  targets the caller's own row. */
 export async function uploadFile(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const caller = await currentParticipant();
   if (!caller) return { ok: false, message: "Sign in first." };
 
@@ -166,6 +167,7 @@ const rolesSchema = z.object({
 
 /** Save the caller's own reviewer-2 and discussant picks. */
 export async function updateRoles(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const caller = await currentParticipant();
   if (!caller) return { ok: false, message: "Sign in first." };
 

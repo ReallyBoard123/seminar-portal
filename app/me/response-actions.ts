@@ -12,7 +12,7 @@ import { z } from "zod";
 
 import { currentParticipant } from "../lib/auth";
 import { listReviewsFor, logEvent, saveResponse } from "../lib/db";
-import { arrayOf, dbId, parseForm, text, type ActionResult } from "../lib/forms";
+import { demoGuard, arrayOf, dbId, parseForm, text, type ActionResult } from "../lib/forms";
 import { REVIEW_POINT_CATEGORIES, type ResponseItem } from "../lib/types";
 
 export type { ActionResult };
@@ -53,6 +53,7 @@ function collectItems(
  *  Only the author the review is about may write it — never the reviewer,
  *  and never a third participant. */
 export async function submitResponse(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const caller = await currentParticipant();
   if (!caller) return { ok: false, message: "Sign in first." };
 

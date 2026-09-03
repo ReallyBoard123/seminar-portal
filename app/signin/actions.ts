@@ -18,7 +18,7 @@ import { hashPin, MIN_PIN_LENGTH, signIn, startSession, endSession } from "../li
 import { getParticipantByName, logEvent, setPinHash } from "../lib/db";
 import { cookies } from "next/headers";
 
-import { parseForm } from "../lib/forms";
+import { DEMO_MESSAGE, demoGuard, parseForm } from "../lib/forms";
 import { GATE_COOKIE } from "../../proxy";
 
 export type SignInState =
@@ -153,6 +153,8 @@ const claimSchema = z.object({
 });
 
 export async function claimPinAction(_prev: SignInState, formData: FormData): Promise<SignInState> {
+  // Demo accounts are pre-claimed; a visitor never sets a PIN here.
+  if (demoGuard()) return { step: "login", ok: false, message: DEMO_MESSAGE };
   if (!(await passSeminarGate(""))) {
     return { step: "login", ok: false, message: "Enter the seminar password first." };
   }

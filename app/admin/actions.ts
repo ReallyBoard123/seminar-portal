@@ -26,7 +26,7 @@ import {
   updateParticipant,
   type NewParticipant,
 } from "@/app/lib/db";
-import { httpUrl, dbId, parseObject, sanitizeFilename, text, type ActionResult } from "@/app/lib/forms";
+import { demoGuard, httpUrl, dbId, parseObject, sanitizeFilename, text, type ActionResult } from "@/app/lib/forms";
 import { FORMAT_KEYS, isFormatKey, type FormatKey, type Participant, type SeminarConfig } from "@/app/lib/types";
 
 export type { ActionResult };
@@ -141,6 +141,7 @@ function parseParticipantCsv(text: string): { rows: ParsedParticipant[]; errors:
  * being true.
  */
 export async function bootstrapImport(_prev: ActionResult, payload: { csv: string }): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const config = await readConfig();
   const existing = await listParticipants(config.edition);
   if (existing.length > 0) {
@@ -182,6 +183,7 @@ export async function importParticipants(
   _prev: ActionResult,
   payload: { csv: string },
 ): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireAdmin();
   if (!organizer) return { ok: false, message: "not authorised" };
 
@@ -250,6 +252,7 @@ export async function saveAssignment(
     homepageUrl: string;
   },
 ): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
 
@@ -305,6 +308,7 @@ export async function resetPinAction(
   _prev: ActionResult,
   payload: { participantId: number },
 ): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireAdmin();
   if (!organizer) return { ok: false, message: "not authorised" };
 
@@ -403,6 +407,7 @@ export async function saveConfig(
   _prev: ActionResult,
   payload: { config: SeminarConfig },
 ): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
 
@@ -451,6 +456,7 @@ export async function saveTemplateUpload(
   _prev: ActionResult,
   payload: { label: string; file: File },
 ): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const organizer = await requireOrganizer();
   if (!organizer) return { ok: false, message: "not authorised" };
 

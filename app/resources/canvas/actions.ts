@@ -16,7 +16,7 @@ import { z } from "zod";
 
 import { currentParticipant } from "../../lib/auth";
 import { logEvent, saveCanvas } from "../../lib/db";
-import { parseForm, pickPosted, text, type ActionResult } from "../../lib/forms";
+import { demoGuard, parseForm, pickPosted, text, type ActionResult } from "../../lib/forms";
 import { CANVASES, type CanvasFieldKey } from "../../lib/types";
 
 export type { ActionResult };
@@ -39,6 +39,7 @@ for (const def of Object.values(CANVASES)) {
 const canvasSchema = z.object(shape);
 
 export async function saveCanvasFields(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  { const demo = demoGuard(); if (demo) return demo; }
   const caller = await currentParticipant();
   if (!caller) return { ok: false, message: "Sign in first." };
 

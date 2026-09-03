@@ -156,3 +156,15 @@ export function sanitizeFilename(raw: string): string {
 export const optionalId = z
   .union([z.literal(""), z.literal("none"), z.coerce.number().int().positive()])
   .transform((v) => (v === "" || v === "none" ? null : v));
+
+/**
+ * The public demo runs with DEMO_MODE=1: reads work, sign-in with existing
+ * PINs works, but every action that would change stored data refuses with
+ * this message. Server-side on purpose — a demo visitor holds real session
+ * cookies, so client-side hiding alone would protect nothing.
+ */
+export const DEMO_MESSAGE = "This is the public demo — changes are disabled. Clone the repo to run your own.";
+
+export function demoGuard(): { ok: false; message: string } | null {
+  return process.env.DEMO_MODE ? { ok: false, message: DEMO_MESSAGE } : null;
+}

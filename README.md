@@ -39,11 +39,12 @@ name with a self-set PIN. No accounts to provision, no OAuth to configure.
 
 **https://seminar-portal-sandy.vercel.app** · seminar password: `touch-and-feel`
 
-- For the organiser view, sign in as **Lovelace** with PIN `demodemo`.
-- For the participant experience, claim any unclaimed name on the roster
-  (Turing, Hopper, …) and set your own PIN — that *is* the onboarding flow.
-- It is a public sandbox: everything in it is visible to other visitors and
-  may be reset at any time. Don't upload anything real.
+- Sign in as any name on the roster — **Lovelace** for the organiser view,
+  Turing, Hopper, … for the participant view. Every account's PIN is
+  `demodemo`.
+- The demo is **read-only** (`DEMO_MODE=1`): browse everything, but uploads,
+  reviews, claims and settings are disabled server-side — every save button
+  answers with a friendly refusal instead.
 
 ## Setup (about 15 minutes)
 
@@ -89,6 +90,7 @@ templates, the review process itself — is edited in the admin UI.
 | `RESEND_API_KEY` | Optional. Without it the portal simply sends no email. |
 | `MAIL_FROM` | e.g. `Seminar <noreply@your-domain.example>` — a domain verified in Resend. |
 | `PORTAL_PUBLIC_URL` | Absolute URL of the deployed site, used inside notification emails. |
+| `DEMO_MODE` | Optional. Set to `1` for a read-only public demo: all mutating actions refuse politely. |
 
 Deploy anywhere Next.js runs; `vercel deploy --prod` works as-is.
 
