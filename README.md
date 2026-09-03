@@ -37,6 +37,10 @@ name with a self-set PIN. No accounts to provision, no OAuth to configure.
 
 ## Setup (about 15 minutes)
 
+Deploying with a coding agent (Claude Code, etc.)? Point it at
+[AGENTS.md](AGENTS.md) — it contains the full CLI provisioning sequence for
+Turso, Vercel and Resend, with the human-in-the-loop steps marked.
+
 ### 1. Clone and install
 
 ```bash
