@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { FileList } from "./FileList";
 import { ReviewForm } from "./ReviewForm";
 import { MyTrail } from "./MyTrail";
+import { SwitchTabs } from "../components/SwitchTabs";
 import { ResponseForm } from "./ResponseForm";
 import { ResponsesToMyReview } from "./ResponsesToMyReview";
 import { ReviewsReceived } from "./ReviewsReceived";
@@ -239,10 +240,11 @@ export default async function SeminarMePage() {
         <section className="mt-10">
           <h2 className="text-lg font-semibold tracking-tight">Reviews you&apos;ve received</h2>
           <p className="text-muted-foreground mt-1 text-sm">
-            From your two reviewers — revise your deliverable against these.
+            The scores from your reviewers. Each written comment sits once, under
+            &quot;Your revision&quot; below, next to your reply.
           </p>
           <div className="mt-4">
-            <ReviewsReceived reviews={reviewsAboutMe} reviewerNames={nameById} />
+            <ReviewsReceived reviews={reviewsAboutMe} reviewerNames={nameById} scoresOnly />
           </div>
           {/* Reviews filled on the old Word sheet and uploaded as a file still
               show up here, so an edition part-way through the change is not
@@ -284,7 +286,28 @@ export default async function SeminarMePage() {
               You aren&apos;t assigned as a reviewer for anyone yet.
             </p>
           ) : (
-            <div className="mt-4 space-y-4">
+            <div className="mt-4">
+              {/* One tab per author: two full review sheets stacked would be a
+                  wall of scroll, and the tab hint shows at a glance which one
+                  still needs work. */}
+              <SwitchTabs
+                items={reviewees.map((r) => {
+                  const theirSubmissions = files.filter(
+                    (f) => f.participantId === r.id && f.kind === "submission",
+                  );
+                  const alreadyReviewed =
+                    reviewsIWrote.some((v) => v.participantId === r.id) ||
+                    files.some(
+                      (f) => f.participantId === r.id && f.authorId === me.id && f.kind === "review",
+                    );
+                  const waiting = theirSubmissions.length === 0 && !alreadyReviewed;
+                  return {
+                    key: String(r.id),
+                    label: r.name,
+                    hint: alreadyReviewed ? "submitted" : waiting ? "waiting" : "needed",
+                  };
+                })}
+              >
               {reviewees.map((r) => {
                 const theirSubmissions = files.filter(
                   (f) => f.participantId === r.id && f.kind === "submission",
@@ -317,6 +340,7 @@ export default async function SeminarMePage() {
                   </Card>
                 );
               })}
+              </SwitchTabs>
             </div>
           )}
         </section>

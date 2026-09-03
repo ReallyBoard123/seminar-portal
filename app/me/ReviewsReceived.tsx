@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { POINT_CATEGORY_LABEL, REVIEW_CRITERIA, type SeminarReview } from "../lib/types";
 
@@ -24,16 +23,15 @@ export function ReviewsReceived({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="divide-border/60 divide-y">
       {reviews.map((r) => (
-        <Card key={r.id}>
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle>{reviewerNames[r.reviewerId] ?? "Unknown reviewer"}</CardTitle>
+        <div key={r.id} className="space-y-5 py-5 first:pt-0 last:pb-0">
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="text-sm font-semibold">{reviewerNames[r.reviewerId] ?? "Unknown reviewer"}</h3>
             <span className="text-muted-foreground text-xs">
               {r.updatedAt === r.submittedAt ? "Submitted" : "Updated"} {DATE_FMT.format(new Date(r.updatedAt))}
             </span>
-          </CardHeader>
-          <CardContent className="space-y-5">
+          </div>
             <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
               {REVIEW_CRITERIA.map((c) => (
                 <div key={c.key} className="flex items-baseline justify-between gap-3">
@@ -50,7 +48,7 @@ export function ReviewsReceived({
             {scoresOnly ? null : r.points.length > 0 ? (
               <ol className="flex flex-col gap-2">
                 {r.points.map((point, i) => (
-                  <li key={point.id} className="border-border/60 rounded-md border p-3">
+                  <li key={point.id} className="border-border/60 border-l-2 pl-3">
                     <div className="flex items-baseline gap-2">
                       <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
                         {i + 1}
@@ -89,8 +87,7 @@ export function ReviewsReceived({
               </div>
             )}
 
-          </CardContent>
-        </Card>
+        </div>
       ))}
     </div>
   );

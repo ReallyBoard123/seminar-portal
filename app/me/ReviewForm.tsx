@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -187,12 +186,11 @@ export function ReviewForm({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Review: {participant.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form action={formAction} onChange={() => setDirty(true)} className="space-y-6">
+    // Flat on purpose: this form already sits inside the reviewee's card, and
+    // a card within a card reads as clutter, not structure.
+    <div className="border-border/60 mt-5 border-t pt-5">
+      <h3 className="text-sm font-semibold">Your review sheet</h3>
+      <form action={formAction} onChange={() => setDirty(true)} className="mt-4 space-y-6">
           <input type="hidden" name="participantId" value={participant.id} />
 
           <div>
@@ -250,7 +248,6 @@ export function ReviewForm({
             )}
           </div>
         </form>
-      </CardContent>
-    </Card>
+    </div>
   );
 }

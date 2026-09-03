@@ -5,13 +5,11 @@ import { useActionState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { submitResponse, type ActionResult } from "./response-actions";
-import { ReviewsReceived } from "./ReviewsReceived";
 import {
   displayPoints,
   POINT_CATEGORY_LABEL,
@@ -75,26 +73,11 @@ export function ResponseForm({
   }
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-          {reviewerName}&apos;s review
-        </h3>
-        <div className="mt-3">
-          <ReviewsReceived
-            reviews={[review]}
-            reviewerNames={{ [review.reviewerId]: reviewerName }}
-            scoresOnly
-          />
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Your response</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form action={formAction} className="space-y-6">
+    <div>
+      {/* The scores already sit under "Reviews you've received"; this block
+          owns the comments and the replies to them — each shown exactly once. */}
+      <h3 className="text-sm font-semibold">{reviewerName}&apos;s comments, your replies</h3>
+      <form action={formAction} className="mt-4 space-y-6">
             <input type="hidden" name="reviewId" value={review.id} />
 
             <div className="flex flex-col gap-1.5">
@@ -140,7 +123,7 @@ export function ResponseForm({
                   {points.map((point) => {
                     const value = values[point.id] ?? { response: "", location: "" };
                     return (
-                      <div key={point.id} className="rounded-lg border border-border/60 p-3">
+                      <div key={point.id} className="border-border/60 border-l-2 pl-4">
                         <Badge variant="outline">{POINT_CATEGORY_LABEL[point.category]}</Badge>
                         <p className="text-foreground mt-2 text-sm whitespace-pre-wrap">{point.text}</p>
 
@@ -205,8 +188,6 @@ export function ResponseForm({
               )}
             </div>
           </form>
-        </CardContent>
-      </Card>
     </div>
   );
 }
