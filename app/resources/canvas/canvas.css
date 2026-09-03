@@ -1,0 +1,30 @@
+/* Pitching Research Canvas — print stylesheet.
+ *
+ * A4 landscape, because the canvas is wide (three horizontal bands), not
+ * tall. Everything inside .canvas-print is forced to black-on-white
+ * regardless of the viewer's theme — oklch dark-mode tokens must never
+ * leak into the PDF people hand a supervisor.
+ */
+
+@page {
+  size: A4 landscape;
+  margin: 12mm;
+}
+
+@media print {
+  .canvas-print,
+  .canvas-print * {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #000 !important;
+  }
+}
+
+@media print {
+  /* A cell dragged taller on screen keeps its inline height; the PDF should
+   * size cells to their text instead. */
+  .canvas-print textarea {
+    height: auto !important;
+    resize: none;
+  }
+}

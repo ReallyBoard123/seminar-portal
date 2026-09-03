@@ -1,0 +1,5 @@
+name,email,institution,format
+Ada Lovelace,ada@example.org,University of Example,full_paper
+Grace Hopper,grace@example.org,University of Example,short_paper
+Alan Turing,alan@example.org,Another University,poster
+Edsger Dijkstra,edsger@example.org,Another University,workshop
