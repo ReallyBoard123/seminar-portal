@@ -50,6 +50,10 @@ function ParticipantRow({
   const [, startTransition] = useTransition();
 
   const others = roster.filter((p) => p.id !== participant.id); // never offer self as reviewer
+  // SelectValue renders the raw value ("3", "full_paper") unless given
+  // children; every trigger below spells out the display name itself.
+  const personName = (id: number | null, empty: string) =>
+    id === null ? empty : (others.find((o) => o.id === id)?.name ?? empty);
   const dirty =
     format !== participant.format ||
     reviewer1Id !== participant.reviewer1Id ||
@@ -103,7 +107,7 @@ function ParticipantRow({
       <TableCell>
         <Select value={format || "none"} onValueChange={(v) => setFormat(v === "none" ? "" : (v as FormatKey))}>
           <SelectTrigger size="sm">
-            <SelectValue />
+            <SelectValue>{format ? FORMAT_LABEL[format] : "—"}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
@@ -121,7 +125,7 @@ function ParticipantRow({
           onValueChange={(v) => setReviewer1Id(v === "none" ? null : Number(v))}
         >
           <SelectTrigger size="sm">
-            <SelectValue />
+            <SelectValue>{personName(reviewer1Id, "unassigned")}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">unassigned</SelectItem>
@@ -139,7 +143,7 @@ function ParticipantRow({
           onValueChange={(v) => setReviewer2Id(v === "none" ? null : Number(v))}
         >
           <SelectTrigger size="sm">
-            <SelectValue />
+            <SelectValue>{personName(reviewer2Id, "not picked")}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">not picked</SelectItem>
@@ -157,7 +161,7 @@ function ParticipantRow({
           onValueChange={(v) => setDiscussantId(v === "none" ? null : Number(v))}
         >
           <SelectTrigger size="sm">
-            <SelectValue />
+            <SelectValue>{personName(discussantId, "not picked")}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">not picked</SelectItem>
