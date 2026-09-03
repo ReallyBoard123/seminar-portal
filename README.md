@@ -35,6 +35,16 @@ name with a self-set PIN. No accounts to provision, no OAuth to configure.
 - **Three rights tiers**: participants, organisers (see everything, run the
   edition), admins (also manage the roster, PINs and rights).
 
+## Try it — live demo
+
+**https://seminar-portal-sandy.vercel.app** · seminar password: `touch-and-feel`
+
+- For the organiser view, sign in as **Lovelace** with PIN `demodemo`.
+- For the participant experience, claim any unclaimed name on the roster
+  (Turing, Hopper, …) and set your own PIN — that *is* the onboarding flow.
+- It is a public sandbox: everything in it is visible to other visitors and
+  may be reset at any time. Don't upload anything real.
+
 ## Setup (about 15 minutes)
 
 Deploying with a coding agent (Claude Code, etc.)? Point it at
